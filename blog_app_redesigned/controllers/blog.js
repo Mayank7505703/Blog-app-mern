@@ -93,6 +93,7 @@ const addBlogPostHandler = async (req, res) => {
 };
 
 module.exports = {
+  getBlogById,
   homePageHandler,
   addBlogGetHandler,
   addBlogPostHandler
