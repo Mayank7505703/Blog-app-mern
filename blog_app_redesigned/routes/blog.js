@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Public
-router.get("/", homePageHandler);
+router.get("/home", homePageHandler);
 
 // Protected page
 router.get("/addBlog", authMiddleware, addBlogGetHandler);
