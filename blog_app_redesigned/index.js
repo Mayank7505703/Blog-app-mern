@@ -22,7 +22,7 @@ app.use(express.urlencoded({extended:true}))
 app.use("/user",userRoutes)
 app.use("/",blogRoutes)
 app.use("/upload", express.static("upload"));
-
+app.get("/", (req, res) => res.redirect("/home"));
 app.listen(PORT,()=>{
   console.log("App is listening to the port : ",PORT)
 })
