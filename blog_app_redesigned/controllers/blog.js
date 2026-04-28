@@ -2,6 +2,19 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Blog = require("../models/blog");
 
+const getBlogById = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    const blog = await Blog.findById(req.params.id).populate("createdBy");
+    if (!blog) return res.redirect("/home");
+    res.render("blog", { user, blog });
+  } catch (err) {
+    console.error(err);
+    res.redirect("/home");
+  }
+};
+
+module.exports = { homePageHandler, addBlogGetHandler, addBlogPostHandler, getBlogById };
 const getLoggedInUser = async (req) => {
   try {
     const token = req.cookies.token;

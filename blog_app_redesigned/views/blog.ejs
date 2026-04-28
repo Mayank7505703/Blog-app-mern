@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include("./partials/head") %>
+  <title><%= blog.title %> — Blogify</title>
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .blog-cover { width: 100%; height: 420px; object-fit: cover; border-radius: 16px; margin-bottom: 36px; }
+    .blog-title { font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 20px; }
+    .blog-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .meta-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--rust)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; flex-shrink: 0; }
+    .meta-name { font-weight: 600; font-size: 0.9rem; }
+    .meta-date { font-size: 0.8rem; color: var(--mist); }
+    .blog-body { font-size: 1.1rem; line-height: 1.85; color: #2a2825; font-weight: 300; white-space: pre-wrap; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--mist); text-decoration: none; font-size: 0.875rem; font-weight: 500; margin-bottom: 32px; transition: color 0.2s; }
+    .back-link:hover { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <%- include("./partials/nav") %>
+  <div class="blog-post">
+    <a href="/home" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to stories</a>
+    <% if(blog.coveredImageURL){ %>
+    <img src="/upload/<%= blog.coveredImageURL %>" alt="<%= blog.title %>" class="blog-cover">
+    <% } %>
+    <h1 class="blog-title"><%= blog.title %></h1>
+    <div class="blog-meta">
+      <div class="meta-avatar"><%= blog.createdBy.username.charAt(0).toUpperCase() %></div>
+      <div>
+        <div class="meta-name"><%= blog.createdBy.username %></div>
+        <div class="meta-date"><%= new Date(blog.createdAt).toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}) %></div>
+      </div>
+    </div>
+    <div class="blog-body"><%= blog.body %></div>
+  </div>
+</body>
+</html>
