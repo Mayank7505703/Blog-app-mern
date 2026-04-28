@@ -14,7 +14,7 @@ const getBlogById = async (req, res) => {
   }
 };
 
-module.exports = { homePageHandler, addBlogGetHandler, addBlogPostHandler, getBlogById };
+
 const getLoggedInUser = async (req) => {
   try {
     const token = req.cookies.token;
