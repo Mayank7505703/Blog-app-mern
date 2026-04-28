@@ -7,6 +7,7 @@ const router = express.Router();
 
 const {
   homePageHandler,
+  getBlogById,
   addBlogGetHandler,
   addBlogPostHandler
 } = require("../controllers/blog");
@@ -23,7 +24,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.get("/blog/:id", blogController.getBlogById);
+router.get("/blog/:id", getBlogById);
 // Public
 router.get("/home", homePageHandler);
 
