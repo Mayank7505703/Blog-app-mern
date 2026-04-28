@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include("./partials/head") %>
+  <title>Write a Story — Blogify</title>
+  <style>
+    textarea.form-control { resize: vertical; min-height: 240px; padding: 14px; font-size: 0.9rem; line-height: 1.7; }
+    .char-count { font-size: 0.72rem; color: var(--mist); text-align: right; margin-top: 4px; }
+    .publish-bar { display: flex; gap: 12px; margin-top: 28px; }
+    .publish-bar .btn-submit { flex: 1; }
+    .cancel-btn { padding: 13px 20px; background: transparent; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--mist); cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .cancel-btn:hover { border-color: var(--ink); color: var(--ink); }
+    .tips-box { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 28px; }
+    .tips-box h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mist); margin-bottom: 8px; }
+    .tips-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tips-list li { font-size: 0.82rem; color: var(--mist); display: flex; gap: 8px; font-weight: 300; }
+    .tips-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <%- include("./partials/nav") %>
+
+  <div class="page-container">
+    <div class="page-header">
+      <h1>Write a Story</h1>
+      <p>Share your ideas, experiences, and perspectives with the world.</p>
+    </div>
+
+    <div class="tips-box">
+      <h4>Writing Tips</h4>
+      <ul class="tips-list">
+        <li>Use a clear, compelling title that tells readers what to expect</li>
+        <li>Add a cover image to make your story stand out in the feed</li>
+        <li>Write with a clear voice — your unique perspective is your superpower</li>
+      </ul>
+    </div>
+
+    <div class="form-card">
+      <% if(locals.error){ %>
+      <div class="alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <%= error %>
+      </div>
+      <% } %>
+
+      <form action="/addBlog" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label class="form-label">Blog Title</label>
+          <input type="text" name="title" class="form-control" placeholder="A title that grabs attention..." required maxlength="120" id="titleInput" oninput="updateCount('titleInput','titleCount',120)">
+          <div class="char-count"><span id="titleCount">0</span> / 120</div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+          <label class="form-label">Story Content</label>
+          <textarea name="body" class="form-control" placeholder="Share your story, insights, or ideas here..." required id="bodyInput" oninput="updateCount('bodyInput','bodyCount',5000)" maxlength="5000"></textarea>
+          <div class="char-count"><span id="bodyCount">0</span> / 5000</div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+          <label class="form-label">Cover Image <span style="color:var(--mist); font-weight:400;">(optional)</span></label>
+          <div class="file-upload-area">
+            <input type="file" name="coveredImageURL" accept="image/*" onchange="showCoverPreview(this)">
+            <div id="uploadDefault">
+              <div class="file-upload-icon"><i class="fa-solid fa-image"></i></div>
+              <div class="file-upload-text"><strong>Click to upload cover image</strong></div>
+              <div class="file-upload-text" style="margin-top:3px;">PNG, JPG, WebP — up to 10MB</div>
+            </div>
+            <div id="uploadPreview" style="display:none;">
+              <img id="previewImg" src="" alt="Preview" style="max-height:120px; border-radius:8px; margin-top:8px;">
+              <div id="previewName" style="margin-top:8px; font-size:0.78rem; color:var(--gold); font-weight:600;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="publish-bar">
+          <a href="/home" class="cancel-btn"><i class="fa-solid fa-xmark"></i> Cancel</a>
+          <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-paper-plane"></i> Publish Story
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+<script>
+function updateCount(inputId, countId, max) {
+  const len = document.getElementById(inputId).value.length;
+  document.getElementById(countId).textContent = len;
+}
+
+function showCoverPreview(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('previewImg').src = e.target.result;
+      document.getElementById('previewName').textContent = '✓ ' + input.files[0].name;
+      document.getElementById('uploadDefault').style.display = 'none';
+      document.getElementById('uploadPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+</body>
+</html>

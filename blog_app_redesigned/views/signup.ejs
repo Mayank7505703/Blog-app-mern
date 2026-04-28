@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include("./partials/head") %>
+  <title>Create Account — Blogify</title>
+</head>
+<body>
+<div class="auth-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-panel-left">
+    <a href="/home" class="auth-brand">Blogify<span>.</span></a>
+
+    <div class="auth-panel-content">
+      <h2>Join a community of <em>curious minds.</em></h2>
+      <p style="margin-top:14px;">Start writing today. No credit card required. Your first story is just minutes away.</p>
+      <div style="margin-top:28px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); font-size:0.875rem;">
+          <i class="fa-solid fa-check" style="color:var(--gold-light); width:16px;"></i>
+          Unlimited blog posts
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); font-size:0.875rem;">
+          <i class="fa-solid fa-check" style="color:var(--gold-light); width:16px;"></i>
+          Beautiful cover image uploads
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); font-size:0.875rem;">
+          <i class="fa-solid fa-check" style="color:var(--gold-light); width:16px;"></i>
+          Secure JWT-based authentication
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); font-size:0.875rem;">
+          <i class="fa-solid fa-check" style="color:var(--gold-light); width:16px;"></i>
+          Your own author profile
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-testimonial">
+      <p>"Setting up my blog took less than 2 minutes. The UI is absolutely gorgeous."</p>
+      <div class="auth-testimonial-author">
+        <div class="auth-testimonial-avatar">P</div>
+        <div class="auth-testimonial-name">Priya Kapoor · Tech Writer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-panel-right">
+    <div class="auth-form-wrapper">
+      <h1>Create Account</h1>
+      <p class="auth-subtitle">Start your writing journey today.</p>
+
+      <% if(locals.error){ %>
+      <div class="alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <%= error %>
+      </div>
+      <% } %>
+
+      <form action="/user/signup" method="POST" enctype="multipart/form-data" id="signupForm">
+
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" name="username" class="form-control" placeholder="yourname" required autocomplete="username" minlength="3">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-icon-wrap">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-icon-wrap" style="position:relative;">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" name="password" id="signupPw" class="form-control" placeholder="Min 8 characters" required autocomplete="new-password" minlength="8" oninput="checkStrength(this.value)" style="padding-right:42px;">
+            <button type="button" class="toggle-pw" onclick="togglePw('signupPw', this)"><i class="fa-regular fa-eye"></i></button>
+          </div>
+          <div class="strength-meter">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-text" id="strengthText">Enter a password</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Profile Photo <span style="color:var(--mist); font-weight:400;">(optional)</span></label>
+          <div class="file-upload-area">
+            <input type="file" name="profileImageURL" accept="image/*" onchange="showFileName(this)">
+            <div class="file-upload-icon"><i class="fa-solid fa-camera"></i></div>
+            <div class="file-upload-text"><strong>Click to upload</strong> or drag & drop</div>
+            <div class="file-upload-text" style="margin-top:3px;">PNG, JPG up to 5MB</div>
+            <div id="fileNameDisplay" style="margin-top:8px; font-size:0.78rem; color:var(--gold); font-weight:600; display:none;"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Account Role</label>
+          <select name="role" class="form-select">
+            <option value="user" selected>Reader & Writer</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Create My Account <i class="fa-solid fa-arrow-right" style="margin-left:4px;"></i>
+        </button>
+
+      </form>
+
+      <div class="auth-switch" style="margin-top:18px;">
+        Already have an account? <a href="/user/signin">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function togglePw(id, btn) {
+  const input = document.getElementById(id);
+  const icon = btn.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.className = 'fa-regular fa-eye-slash';
+  } else {
+    input.type = 'password';
+    icon.className = 'fa-regular fa-eye';
+  }
+}
+
+function checkStrength(val) {
+  const fill = document.getElementById('strengthFill');
+  const text = document.getElementById('strengthText');
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const levels = [
+    { pct: '0%',   color: 'transparent',  label: 'Enter a password' },
+    { pct: '25%',  color: '#ef4444',      label: 'Weak' },
+    { pct: '50%',  color: '#f97316',      label: 'Fair' },
+    { pct: '75%',  color: '#eab308',      label: 'Good' },
+    { pct: '100%', color: '#22c55e',      label: 'Strong ✓' },
+  ];
+  const lvl = levels[score];
+  fill.style.width = lvl.pct;
+  fill.style.background = lvl.color;
+  text.textContent = lvl.label;
+  text.style.color = lvl.color === 'transparent' ? 'var(--mist)' : lvl.color;
+}
+
+function showFileName(input) {
+  const display = document.getElementById('fileNameDisplay');
+  if (input.files.length > 0) {
+    display.textContent = '✓ ' + input.files[0].name;
+    display.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

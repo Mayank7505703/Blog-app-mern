@@ -1,0 +1,24 @@
+<div class="blog-card">
+  <div class="card-image">
+    <% if(blog.coveredImageURL){ %>
+    <img src="/upload/<%= blog.coveredImageURL %>" alt="<%= blog.title %>">
+    <% } else { %>
+    <div class="card-image-placeholder">✦</div>
+    <% } %>
+    <span class="card-tag">Blog Post</span>
+  </div>
+  <div class="card-body">
+    <h3><%= blog.title %></h3>
+    <p><%= blog.body.slice(0, 115) %>…</p>
+    <div class="card-footer-row">
+      <div class="author-info">
+        <div class="author-avatar"><%= blog.createdBy.username.charAt(0).toUpperCase() %></div>
+        <div>
+          <div class="author-name"><%= blog.createdBy.username %></div>
+          <div class="author-date"><%= new Date(blog.createdAt).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) %></div>
+        </div>
+      </div>
+      <a href="/blog/<%= blog._id %>" class="read-more">Read <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+    </div>
+  </div>
+</div>
